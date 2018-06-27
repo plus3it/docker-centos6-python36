@@ -2,9 +2,17 @@ language: python
 sudo: required
 
 before_install:
+  - sudo service docker stop
+  - sudo apt-get remove docker docker-engine docker.io
   - sudo apt-get update        # Fetches the list of available updates
-  - sudo apt-get install docker
-  - sudo service docker restart
+  - |
+    sudo apt-get install \
+      apt-transport-https \
+      ca-certificates \
+      curl \
+      software-properties-common \
+      docker-ce
+  - sudo service docker start
   - sleep 5
 
 install:
