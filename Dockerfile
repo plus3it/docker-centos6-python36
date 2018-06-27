@@ -50,9 +50,6 @@ RUN set -ex \
 	&& ./configure \
                 --build="$(arch)" \
                 --enable-shared \
-                --with-system-expat \
-                --with-system-ffi \
-                --without-ensurepip \
 	&& make -j "$(nproc)" \
 	&& make install \
         \
