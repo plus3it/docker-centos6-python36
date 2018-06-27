@@ -2,26 +2,19 @@ language: python
 sudo: required
 
 before_install:
-  - sudo service docker stop
-  - sleep 10
-  - sudo apt-get remove docker docker-engine docker.io
-  - sudo apt-get update        # Fetches the list of available updates
-  - |
-    sudo apt-get install \
-      apt-transport-https \
-      ca-certificates \
-      curl \
-      software-properties-common \
-      docker-ce
+  - sudo apt-get install pass
+  - curl -so https://github.com/docker/docker-credential-helpers/releases/download/v0.6.0/docker-credential-pass-v0.6.0-amd64.tar.gz
+  - export PATH=$PWD:$PATH
   - sudo service docker restart
-  - sudo docker --version
   - sleep 5
+  - sudo docker --version
 
 install:
   - sudo docker pull centos:centos6
 
 script:
   - sudo docker build -t ${DOCKER_USERNAME}/${DOCKER_REPO} .
+  - sudo docker images
 
   # Deploy in script since docker isn't a provider
   - sudo docker login --username=${DOCKER_USERNAME} --password=${DOCKER_PASSWORD}

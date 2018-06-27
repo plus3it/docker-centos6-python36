@@ -75,7 +75,7 @@ RUN set -ex \
 		\) -exec rm -rf '{}' + \
 	&& rm -f get-pip.py
 
-RUN pip install -r requirements.txt
+RUN pip install virtualenv
 
 RUN yum -y install upstart \
         && yum clean all
