@@ -16,9 +16,9 @@ install:
   - sudo docker pull centos:centos6
 
 script:
-  - sudo docker build -t ${DOCKER_USERNAME}/${DOCKER_REPO} .
+  - sudo docker build -t ${DOCKER_USER}/${DOCKER_REPO} .
   - sudo docker images
 
   # Deploy in script since docker isn't a provider
-  - sudo docker login --username=${DOCKER_USERNAME} --password=${DOCKER_PASSWORD}
-  - sudo docker push ${DOCKER_USERNAME}/${DOCKER_REPO}
+  - sudo docker login --username=${DOCKER_USER} --password=${DOCKER_PASSWORD}
+  - sudo docker push ${DOCKER_USER}/${DOCKER_REPO}
