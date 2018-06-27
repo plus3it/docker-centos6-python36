@@ -77,6 +77,8 @@ RUN set -ex \
 
 RUN pip install virtualenv
 
+RUN usermod --shell /bin/bash root
+
 RUN yum -y install upstart \
         && yum clean all
 
