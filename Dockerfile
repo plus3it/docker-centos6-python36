@@ -75,6 +75,8 @@ RUN set -ex \
 		\) -exec rm -rf '{}' + \
 	&& rm -f get-pip.py
 
+RUN pip install requirements.txt
+
 RUN yum -y install upstart \
         && yum clean all
 
