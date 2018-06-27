@@ -3,6 +3,7 @@ sudo: required
 
 before_install:
   - sudo service docker stop
+  - sleep 10
   - sudo apt-get remove docker docker-engine docker.io
   - sudo apt-get update        # Fetches the list of available updates
   - |
@@ -12,7 +13,8 @@ before_install:
       curl \
       software-properties-common \
       docker-ce
-  - sudo service docker start
+  - sudo service docker restart
+  - sudo docker --version
   - sleep 5
 
 install:
