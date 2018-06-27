@@ -55,7 +55,9 @@ RUN set -ex \
                 --without-ensurepip \
 	&& make -j "$(nproc)" \
 	&& make install \
-        && ldconfig \
+        \
+        && echo "/usr/local/lib" >> /etc/ld.so.conf \
+        && ldconfig -v \
         \
 	&& rm -rf /usr/src/python \
         \
