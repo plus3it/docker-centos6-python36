@@ -33,22 +33,34 @@ RUN set -ex \
         make \
         ncurses-dev \
         libressl \
+        \
         && curl -so python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
         && curl -so python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
+        \
         && export GNUPGHOME="$(mktemp -d)" \
 	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
 	&& gpg --batch --verify python.tar.xz.asc python.tar.xz \
 	&& rm -rf "$GNUPGHOME" python.tar.xz.asc \
+        \
 	&& mkdir -p /usr/src/python \
 	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
 	&& rm python.tar.xz \
+        \
 	&& cd /usr/src/python \
-        && ./configure \
-        && make \
-        && make install \
-        && rm -rf /usr/src/python \
-        && python --version \
-        && python3 --version
+	&& ./configure \
+                --build="$(arch)" \
+                --enable-shared \
+                --with-system-expat \
+                --with-system-ffi \
+                --without-ensurepip \
+	&& make -j "$(nproc)" \
+	&& make install \
+        && ldconfig \
+        \
+	&& rm -rf /usr/src/python \
+        \
+	&& python --version \
+	&& python3 --version
 
 # make some useful symlinks that are expected to exist
 RUN cd /usr/local/bin \

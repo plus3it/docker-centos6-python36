@@ -2,6 +2,9 @@ language: python
 sudo: required
 
 before_install:
+  - sudo apt-get update
+  - sudo apt-get install docker
+  # setup a credential store for logging into docker hub
   - sudo apt-get install pass
   - curl -sO https://github.com/docker/docker-credential-helpers/releases/download/v0.6.0/docker-credential-pass-v0.6.0-amd64.tar.gz
   - export PATH=$PWD:$PATH
