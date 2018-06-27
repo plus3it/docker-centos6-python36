@@ -3,7 +3,7 @@ sudo: required
 
 before_install:
   - sudo apt-get install pass
-  - curl -so https://github.com/docker/docker-credential-helpers/releases/download/v0.6.0/docker-credential-pass-v0.6.0-amd64.tar.gz
+  - curl -sO https://github.com/docker/docker-credential-helpers/releases/download/v0.6.0/docker-credential-pass-v0.6.0-amd64.tar.gz
   - export PATH=$PWD:$PATH
   - sudo service docker restart
   - sleep 5
