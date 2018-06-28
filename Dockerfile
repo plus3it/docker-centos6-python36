@@ -8,8 +8,6 @@ ENV PYTHON_PIP_VERSION 10.0.1
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
 
-ENV LD_LIBRARY_PATH /usr/local/bin
-
 ## US English ##
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
@@ -18,34 +16,41 @@ ENV LC_CTYPE en_US.UTF-8
 
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 
-RUN yum -y update
+# Start by making sure your system is up-to-date:
+RUN yum update -y
+
+# Compilers and related tools:
+RUN yum groupinstall -y "development tools"
+
+# Libraries needed during compilation to enable all features of Python:
+RUN yum install -y \
+        zlib-devel \
+        bzip2-devel \
+        openssl-devel \
+        ncurses-devel \
+        sqlite-devel \
+        readline-devel \
+        tk-devel \
+        gdbm-devel \
+        db4-devel \
+        libpcap-devel \
+        xz-devel \
+        expat-devel \
+        gnupg
+
+# If you are on a clean "minimal" install of CentOS you also need the wget tool:
+RUN yum install -y wget
 
 # Install the ca-certificates package
-RUN yum -y install ca-certificates
-
-# Extended repo
-RUN yum -y install epel-release
+RUN yum install -y ca-certificates
 
 # Enable the dynamic CA configuration feature:
 RUN update-ca-trust force-enable
 
 # install python3
 RUN set -ex \
-        && yum -y install \
-        gcc \
-        glibc \
-        zlib-devel \
-        openssl \
-        openssl-devel \
-        gnupg \
-        tar \
-        xz \
-        make \
-        ncurses-devel \
-        libzip \
-        \
-        && curl -so python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-        && curl -so python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
+        wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
+        wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
         \
         && export GNUPGHOME="$(mktemp -d)" \
 	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
@@ -57,19 +62,24 @@ RUN set -ex \
 	&& rm python.tar.xz \
         \
 	&& cd /usr/src/python \
-	&& ./configure \
+        && ./configure \
                 --build="$(arch)" \
+                --prefix=/usr/local \
                 --enable-shared \
-	&& make -j "$(nproc)" \
-	&& make install \
+                LDFLAGS="-Wl,-rpath /usr/local/lib" \
+        && make -j "$(nproc)" \
+        && make altinstall \
         \
-        && echo "/usr/local/lib" >> /etc/ld.so.conf \
-        && ldconfig -v \
-        \
+        #&& echo "/usr/local/lib" >> /etc/ld.so.conf \
+        #&& ldconfig -v \
+        #\
 	&& rm -rf /usr/src/python \
         \
 	&& python --version \
 	&& python3 --version
+
+# strip symbols from the shared library to reduce the memory footprint.
+RUN strip /usr/local/lib/libpython3.6m.so.1.0
 
 # make some useful symlinks that are expected to exist
 RUN cd /usr/local/bin \
@@ -79,8 +89,8 @@ RUN cd /usr/local/bin \
 	&& ln -s python3-config python-config
 
 RUN set -ex \
-	&& curl -so get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
-	&& python get-pip.py \
+	&& wget https://bootstrap.pypa.io/get-pip.py \
+	&& python3.6 get-pip.py \
 		--disable-pip-version-check \
 		--no-cache-dir \
 		"pip==$PYTHON_PIP_VERSION" \
@@ -93,7 +103,7 @@ RUN set -ex \
 		\) -exec rm -rf '{}' + \
 	&& rm -f get-pip.py
 
-RUN pip install \
+RUN pip3 install \
         virtualenv \
         attrs \
         funcsigs \
@@ -109,7 +119,7 @@ RUN pip install \
         six \
         wheel
 
-RUN yum -y install upstart \
+RUN yum install -y upstart \
         && yum clean all
 
 CMD ["/bin/bash"]
