@@ -76,7 +76,7 @@ RUN set -ex \
 	&& rm -rf /usr/src/python \
         \
 	&& python --version \
-	&& python3 --version
+	&& python3.6 --version
 
 # strip symbols from the shared library to reduce the memory footprint.
 RUN strip /usr/local/lib/libpython3.6m.so.1.0
