@@ -1,6 +1,9 @@
 FROM centos:6
 
-ENV PYTHON_VERSION 3.6.5
+ENV PYTHON_VERSION 3.7.0
+
+# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
+ENV PYTHON_PIP_VERSION 10.0.1
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
@@ -27,12 +30,12 @@ RUN set -ex \
         gcc \
         zlib-devel \
         openssl-devel \
+        libssl-dev \
         gnupg \
         tar \
         xz \
         make \
         ncurses-dev \
-        libressl \
         \
         && curl -so python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
         && curl -so python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
@@ -67,9 +70,6 @@ RUN cd /usr/local/bin \
 	&& ln -s pydoc3 pydoc \
 	&& ln -s python3 python \
 	&& ln -s python3-config python-config
-
-# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 10.0.1
 
 RUN set -ex \
 	&& curl -so get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
