@@ -29,13 +29,16 @@ RUN set -ex \
         && yum -y install \
         gcc \
         zlib-devel \
+        openssl \
         openssl-devel \
+        openssl-libs \
         libssl-dev \
         gnupg \
         tar \
         xz \
         make \
         ncurses-dev \
+        libzip \
         \
         && curl -so python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
         && curl -so python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
