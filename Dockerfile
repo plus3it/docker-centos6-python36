@@ -23,6 +23,9 @@ RUN yum -y update
 # Install the ca-certificates package
 RUN yum -y install ca-certificates
 
+# Extended repo
+RUN yum -y install epel-release
+
 # Enable the dynamic CA configuration feature:
 RUN update-ca-trust force-enable
 
@@ -30,16 +33,15 @@ RUN update-ca-trust force-enable
 RUN set -ex \
         && yum -y install \
         gcc \
+        glibc \
         zlib-devel \
         openssl \
         openssl-devel \
-        openssl-libs \
-        libssl-dev \
         gnupg \
         tar \
         xz \
         make \
-        ncurses-dev \
+        ncurses-devel \
         libzip \
         \
         && curl -so python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
@@ -91,9 +93,21 @@ RUN set -ex \
 		\) -exec rm -rf '{}' + \
 	&& rm -f get-pip.py
 
-RUN pip install virtualenv
-
-RUN usermod --shell /bin/bash root
+RUN pip install \
+        virtualenv \
+        attrs \
+        funcsigs \
+        mock \
+        nose \
+        numpy \
+        pbr \
+        pip \
+        pluggy \
+        py \
+        pytest \
+        setuptools \
+        six \
+        wheel
 
 RUN yum -y install upstart \
         && yum clean all
