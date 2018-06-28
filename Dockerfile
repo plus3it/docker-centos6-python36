@@ -1,12 +1,14 @@
 FROM centos:6
 
-ENV PYTHON_VERSION 3.7.0
+ENV PYTHON_VERSION 3.6.6
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 10.0.1
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
+
+ENV LD_LIBRARY_PATH /usr/local/bin
 
 ## US English ##
 ENV LANG en_US.UTF-8
