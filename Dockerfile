@@ -1,6 +1,7 @@
 FROM centos:6
 
-ENV PYTHON_VERSION 3.6.6
+ENV PYTHON_VERSION 3.4.8
+ENV PYTHON3_EXE "python${PYTHON_VERSION:0:3}"
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 10.0.1
@@ -76,10 +77,10 @@ RUN set -ex \
 	&& rm -rf /usr/src/python \
         \
 	&& python --version \
-	&& python3.6 --version
+	&& ${PYTHON3_EXE} --version
 
 # strip symbols from the shared library to reduce the memory footprint.
-RUN strip /usr/local/lib/libpython3.6m.so.1.0
+RUN strip /usr/local/lib/lib${PYTHON3_EXE}m.so.1.0
 
 # make some useful symlinks that are expected to exist
 #RUN cd /usr/local/bin \
@@ -90,7 +91,7 @@ RUN strip /usr/local/lib/libpython3.6m.so.1.0
 
 RUN set -ex \
 	&& wget https://bootstrap.pypa.io/get-pip.py \
-	&& python3.6 get-pip.py \
+	&& ${PYTHON3_EXE} get-pip.py \
 		--disable-pip-version-check \
 		--no-cache-dir \
 		"pip==$PYTHON_PIP_VERSION" \
