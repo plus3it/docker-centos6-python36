@@ -82,11 +82,11 @@ RUN set -ex \
 RUN strip /usr/local/lib/libpython3.6m.so.1.0
 
 # make some useful symlinks that are expected to exist
-RUN cd /usr/local/bin \
-	&& ln -s idle3 idle \
-	&& ln -s pydoc3 pydoc \
-	&& ln -s python3 python \
-	&& ln -s python3-config python-config
+#RUN cd /usr/local/bin \
+#	&& ln -s idle3 idle \
+#	&& ln -s pydoc3 pydoc \
+#	&& ln -s python3 python \
+#	&& ln -s python3-config python-config
 
 RUN set -ex \
 	&& wget https://bootstrap.pypa.io/get-pip.py \
@@ -111,7 +111,6 @@ RUN pip3 install \
         nose \
         numpy \
         pbr \
-        pip \
         pluggy \
         py \
         pytest \
