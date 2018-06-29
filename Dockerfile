@@ -1,6 +1,6 @@
 FROM centos:6
 
-ENV PYTHON_VERSION 3.4.8
+ENV PYTHON_VERSION 3.6.3
 RUN export PYTHON3_EXE=python${PYTHON_VERSION:0:3}
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
