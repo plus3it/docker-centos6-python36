@@ -1,7 +1,7 @@
 FROM centos:6
 
 ENV PYTHON_VERSION 3.6.3
-RUN export PYTHON3_EXE=python${PYTHON_VERSION:0:3}
+ENV PYTHON3_EXE python3.6
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 10.0.1
@@ -63,6 +63,7 @@ RUN set -ex \
 	&& rm python.tar.xz \
         \
 	&& cd /usr/src/python \
+        && export LD_LIBRARY_PATH=/usr/local/lib \
         && ./configure \
                 --build="$(arch)" \
                 --prefix=/usr/local \
