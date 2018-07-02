@@ -3,7 +3,7 @@ FROM centos:6
 ENV PYTHON_VERSION 3.6.6
 ENV PYTHON3_EXE python3
 
-RUN export INSTALL_LOC=/opt/python/$PYTHON_VERSION
+ENV INSTALL_LOC /opt/python/$PYTHON_VERSION
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 10.0.1
