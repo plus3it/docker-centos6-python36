@@ -1,19 +1,16 @@
 FROM centos:6
 
 ENV PYTHON_VERSION 3.6.6
-ENV PYTHON3_EXE python3
+ENV PYTHON3_EXE python3.6
 
-ENV INSTALL_LOC /opt/python/$PYTHON_VERSION
+ENV INSTALL_BASE /opt/python
+ENV INSTALL_LOC $INSTALL_BASE/$PYTHON_VERSION
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 10.0.1
 
 # ensure local python is preferred over distribution python
 ENV PATH $INSTALL_LOC/bin:$PATH
-
-RUN echo "INSTALL_LOC:$INSTALL_LOC"
-RUN echo "PATH:$PATH"
-RUN exit 1
 
 ## US English ##
 ENV LANG en_US.UTF-8
@@ -95,26 +92,28 @@ RUN set -ex \
 	&& rm -rf /usr/src/python \
         \
 	&& python --version \
-	&& ${PYTHON3_EXE} --version
+	#&& ${PYTHON3_EXE} --version \
+        && ls -hal $INSTALL_LOC/bin \
+        && ls -hal $INSTALL_LOC
 
 # strip symbols from the shared library to reduce the memory footprint.
 RUN strip $INSTALL_LOC/lib/lib${PYTHON3_EXE}m.so.1.0
 
 # make some useful symlinks that are expected to exist
-#RUN cd $INSTALL_LOC/bin \
-#	&& ln -s idle3 idle \
-#	&& ln -s pydoc3 pydoc \
-#	&& ln -s python3 python \
-#	&& ln -s python3-config python-config
+RUN cd $INSTALL_LOC/bin \
+	&& ln -s idle3 idle \
+	&& ln -s pydoc3 pydoc \
+	&& ln -s python3 python \
+	&& ln -s python3-config python-config
 
 RUN set -ex \
 	&& wget https://bootstrap.pypa.io/get-pip.py \
-	&& ${PYTHON3_EXE} get-pip.py \
+	&& python3 get-pip.py \
 		--disable-pip-version-check \
 		--no-cache-dir \
 		"pip==$PYTHON_PIP_VERSION" \
 	&& pip --version \
-	&& find /opt/python -depth \
+	&& find $INSTALL_BASE -depth \
 		\( \
 			\( -type d -a \( -name test -o -name tests \) \) \
 			-o \
