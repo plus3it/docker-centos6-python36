@@ -3,11 +3,13 @@ FROM centos:6
 ENV PYTHON_VERSION 3.6.6
 ENV PYTHON3_EXE python3
 
+RUN export INSTALL_LOC=/opt/python/$PYTHON_VERSION
+
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 10.0.1
 
 # ensure local python is preferred over distribution python
-ENV PATH /usr/local/bin:$PATH
+ENV PATH $INSTALL_LOC/bin:$PATH
 
 ## US English ##
 ENV LANG en_US.UTF-8
@@ -63,27 +65,27 @@ RUN set -ex \
 	&& rm python.tar.xz \
         \
 	&& cd /usr/src/python \
-        #&& export LD_LIBRARY_PATH=/usr/local/lib \
+        #&& export LD_LIBRARY_PATH=$INSTALL_LOC/lib \
         #&& ./configure \
         #        --build="$(arch)" \
         #        --prefix=/usr/local \
         #        --enable-shared \
-        #        LDFLAGS="-Wl,-rpath /usr/local/lib" \
+        #        LDFLAGS="-Wl,-rpath $INSTALL_LOC/lib" \
         && ./configure \
-                --prefix=/opt/python/$PYTHON_VERSION \
+                --prefix=$INSTALL_LOC \
                 --with-wide-unicode \
                 --enable-shared \
                 --enable-ipv6 \
                 --enable-loadable-sqlite-extensions \
                 --with-computed-gotos \
-                --libdir=/opt/python/$PYTHON_VERSION/lib \
+                --libdir=$INSTALL_LOC/lib \
                 CFLAGS="-g -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security" \
-                LDFLAGS="-L/opt/python/$PYTHON_VERSION/lib -Wl,-rpath=/opt/python/$PYTHON_VERSION/lib " \
-                CPPFLAGS="-I/opt/python/$PYTHON_VERSION/include " \
+                LDFLAGS="-L$INSTALL_LOC/lib -Wl,-rpath=$INSTALL_LOC/lib " \
+                CPPFLAGS="-I$INSTALL_LOC/include " \
         && make -j "$(nproc)" \
         && make altinstall \
         \
-        #&& echo "/usr/local/lib" >> /etc/ld.so.conf \
+        #&& echo "$INSTALL_LOC/lib" >> /etc/ld.so.conf \
         #&& ldconfig -v \
         #\
 	&& rm -rf /usr/src/python \
@@ -92,10 +94,10 @@ RUN set -ex \
 	&& ${PYTHON3_EXE} --version
 
 # strip symbols from the shared library to reduce the memory footprint.
-RUN strip /usr/local/lib/lib${PYTHON3_EXE}m.so.1.0
+RUN strip $INSTALL_LOC/lib/lib${PYTHON3_EXE}m.so.1.0
 
 # make some useful symlinks that are expected to exist
-#RUN cd /usr/local/bin \
+#RUN cd $INSTALL_LOC/bin \
 #	&& ln -s idle3 idle \
 #	&& ln -s pydoc3 pydoc \
 #	&& ln -s python3 python \
@@ -108,7 +110,7 @@ RUN set -ex \
 		--no-cache-dir \
 		"pip==$PYTHON_PIP_VERSION" \
 	&& pip --version \
-	&& find /usr/local -depth \
+	&& find /opt/python -depth \
 		\( \
 			\( -type d -a \( -name test -o -name tests \) \) \
 			-o \
