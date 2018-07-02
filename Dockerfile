@@ -4,6 +4,9 @@ ENV PYTHON_VERSION 3.6.6
 ENV PYTHON3_EXE python3
 
 RUN export INSTALL_LOC=/opt/python/$PYTHON_VERSION
+RUN echo $INSTALL_LOC
+
+RUN exit 1
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 10.0.1
@@ -65,7 +68,7 @@ RUN set -ex \
 	&& rm python.tar.xz \
         \
 	&& cd /usr/src/python \
-        #&& export LD_LIBRARY_PATH=$INSTALL_LOC/lib \
+        && export LD_LIBRARY_PATH=$INSTALL_LOC/lib \
         #&& ./configure \
         #        --build="$(arch)" \
         #        --prefix=/usr/local \
