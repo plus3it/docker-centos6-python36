@@ -1,6 +1,6 @@
 FROM centos:6
 
-ENV PYTHON_VERSION 3.6.3
+ENV PYTHON_VERSION 3.6.6
 ENV PYTHON3_EXE python3.6
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
@@ -63,12 +63,23 @@ RUN set -ex \
 	&& rm python.tar.xz \
         \
 	&& cd /usr/src/python \
-        && export LD_LIBRARY_PATH=/usr/local/lib \
+        #&& export LD_LIBRARY_PATH=/usr/local/lib \
+        #&& ./configure \
+        #        --build="$(arch)" \
+        #        --prefix=/usr/local \
+        #        --enable-shared \
+        #        LDFLAGS="-Wl,-rpath /usr/local/lib" \
         && ./configure \
-                --build="$(arch)" \
-                --prefix=/usr/local \
+                --prefix=/opt/python/$PYTHON_VERSION \
+                --with-wide-unicode \
                 --enable-shared \
-                LDFLAGS="-Wl,-rpath /usr/local/lib" \
+                --enable-ipv6 \
+                --enable-loadable-sqlite-extensions \
+                --with-computed-gotos \
+                --libdir=/opt/python/$PYTHON_VERSION/lib \
+                CFLAGS="-g -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security" \
+                LDFLAGS="-L/opt/python/$PYTHON_VERSION/lib -Wl,-rpath=/opt/python/$PYTHON_VERSION/lib " \
+                CPPFLAGS="-I/opt/python/$PYTHON_VERSION/include " \
         && make -j "$(nproc)" \
         && make altinstall \
         \
@@ -105,7 +116,7 @@ RUN set -ex \
 		\) -exec rm -rf '{}' + \
 	&& rm -f get-pip.py
 
-RUN pip3 install \
+RUN pip install \
         virtualenv \
         attrs \
         funcsigs \
