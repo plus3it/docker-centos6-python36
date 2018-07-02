@@ -4,15 +4,16 @@ ENV PYTHON_VERSION 3.6.6
 ENV PYTHON3_EXE python3
 
 RUN export INSTALL_LOC=/opt/python/$PYTHON_VERSION
-RUN echo $INSTALL_LOC
-
-RUN exit 1
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 10.0.1
 
 # ensure local python is preferred over distribution python
 ENV PATH $INSTALL_LOC/bin:$PATH
+
+RUN echo "INSTALL_LOC:$INSTALL_LOC"
+RUN echo "PATH:$PATH"
+RUN exit 1
 
 ## US English ##
 ENV LANG en_US.UTF-8
