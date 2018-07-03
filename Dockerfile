@@ -1,4 +1,4 @@
-FROM centos:6
+FROM centos:7
 
 ENV PYTHON_MINOR_VERSION 3.6
 ENV PYTHON_PATCH_VERSION 6
@@ -66,11 +66,16 @@ COPY libcrypto.so.1.0.0 /usr/lib64/libcrypto.so.1.0.0
 
 COPY libssl.so.1.0.0 /usr/lib64/libssl.so.1.0.0
 
-RUN cd /usr/lib64 \
-        && ln -sf libssl.so.1.0.0 libssl.so.10 \
-        && ln -sf libssl.so.1.0.0 libssl.so \
-        && ln -sf libcrypto.so.1.0.0 libcrypto.so.10 \
-        && ln -sf libcrypto.so.1.0.0 libcrypto.so
+#RUN cd /usr/lib64 \
+#        && ln -sf libssl.so.1.0.0 libssl.so.10 \
+#        && ln -sf libssl.so.1.0.0 libssl.so \
+#        && ln -sf libcrypto.so.1.0.0 libcrypto.so.10 \
+#        && ln -sf libcrypto.so.1.0.0 libcrypto.so
+
+RUN cd /lib64 \
+        && wget -O libz.so.1.2.3 "https://s3.amazonaws.com/watchmaker-dev/releases/Lib/libz.so.1.2.3" \
+        && ln -sf libz.so.1.2.3 libz.so.1 \
+        && ln -sf libz.so.1.2.3 libz.so
 
 # install python3
 RUN set -ex \
@@ -149,5 +154,7 @@ RUN pip install \
 
 RUN yum install -y upstart \
         && yum clean all
+
+ENV LD_LIBRARY_PATH .:$INSTALL_LOC/lib:/usr/lib64:/lib64        
 
 CMD ["/bin/bash"]
