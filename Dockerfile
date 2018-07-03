@@ -72,10 +72,10 @@ ENV LD_LIBRARY_PATH $INSTALL_LOC/lib:/usr/lib64:/lib64
 #        && ln -sf libcrypto.so.1.0.0 libcrypto.so.10 \
 #        && ln -sf libcrypto.so.1.0.0 libcrypto.so
 
-RUN cd /lib64 \
-        && wget -O libz.so.1.2.3 "https://s3.amazonaws.com/watchmaker-dev/releases/Lib/libz.so.1.2.3" \
-        && ln -sf libz.so.1.2.3 libz.so.1 \
-        && ln -sf libz.so.1.2.3 libz.so
+#RUN cd /lib64 \
+#        && wget -O libz.so.1.2.3 "https://s3.amazonaws.com/watchmaker-dev/releases/Lib/libz.so.1.2.3" \
+#        && ln -sf libz.so.1.2.3 libz.so.1 \
+#        && ln -sf libz.so.1.2.3 libz.so
 
 # install python3
 RUN set -ex \
