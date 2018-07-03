@@ -54,8 +54,8 @@ RUN update-ca-trust force-enable
 
 # adjust linking
 RUN cd /usr/lib64 \
-        && ln -s libssl.so.1.0.0 libssl.so.10 \
-        && ln -s libcrypto.so.1.0.0 libcrypto.so.10 \
+        && ln -s libssl.so.10 libssl.so.1.0.0 \
+        && ln -s libcrypto.so.10 libcrypto.so.1.0.0 \
         ls -hal
 
 ENV LD_LIBRARY_PATH $INSTALL_LOC/lib:/usr/lib64:/lib64
