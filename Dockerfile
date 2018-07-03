@@ -152,8 +152,7 @@ RUN pip install \
         six \
         wheel
 
-RUN yum install -y upstart \
-        && yum clean all
+RUN yum clean all
 
 ENV LD_LIBRARY_PATH .:$INSTALL_LOC/lib:/usr/lib64:/lib64        
 
