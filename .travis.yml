@@ -14,8 +14,8 @@ before_install:
 
 install:
   - sudo docker pull centos:centos7
-  - sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 .
-  - sudo cp /lib/x86_64-linux-gnu/libssl.so.1.0.0 .
+  #- sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 .
+  #- sudo cp /lib/x86_64-linux-gnu/libssl.so.1.0.0 .
 
 script:
   - sudo docker build -t ${DOCKER_USER}/${DOCKER_REPO} .

@@ -62,9 +62,9 @@ RUN update-ca-trust force-enable
 
 ENV LD_LIBRARY_PATH $INSTALL_LOC/lib:/usr/lib64:/lib64
 
-COPY libcrypto.so.1.0.0 /usr/lib64/libcrypto.so.1.0.0
+#COPY libcrypto.so.1.0.0 /usr/lib64/libcrypto.so.1.0.0
 
-COPY libssl.so.1.0.0 /usr/lib64/libssl.so.1.0.0
+#COPY libssl.so.1.0.0 /usr/lib64/libssl.so.1.0.0
 
 #RUN cd /usr/lib64 \
 #        && ln -sf libssl.so.1.0.0 libssl.so.10 \
