@@ -56,16 +56,13 @@ RUN update-ca-trust force-enable
 RUN set -ex \
         && wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
         && wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
-        \
         && export GNUPGHOME="$(mktemp -d)" \
 	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
 	&& gpg --batch --verify python.tar.xz.asc python.tar.xz \
 	&& rm -rf "$GNUPGHOME" python.tar.xz.asc \
-        \
 	&& mkdir -p /usr/src/python \
 	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
 	&& rm python.tar.xz \
-        \
 	&& cd /usr/src/python \
         && export LD_LIBRARY_PATH=$INSTALL_LOC/lib \
         #&& ./configure \
@@ -86,16 +83,16 @@ RUN set -ex \
                 CPPFLAGS="-I$INSTALL_LOC/include " \
         && make -j "$(nproc)" \
         && make altinstall \
-        \
         #&& echo "$INSTALL_LOC/lib" >> /etc/ld.so.conf \
         #&& ldconfig -v \
         #\
 	&& rm -rf /usr/src/python \
-        \
 	&& python --version \
 	#&& ${PYTHON3_EXE} --version \
         && ls -hal $INSTALL_LOC/bin \
-        && ls -hal $INSTALL_LOC
+        && ls -hal $INSTALL_LOC \
+        && ls -hal $INSTALL_LOC/lib \
+        && ls -hal /usr/local/lib
 
 # strip symbols from the shared library to reduce the memory footprint.
 #RUN strip $INSTALL_LOC/lib/lib${PYTHON_MINOR_VERSION}m.so.1.0
