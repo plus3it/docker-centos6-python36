@@ -53,14 +53,18 @@ RUN yum install -y ca-certificates
 RUN update-ca-trust force-enable
 
 # adjust linking
-RUN cd /usr/lib64 \
-        #&& ln -s libssl.so.10 libssl.so.1.0.0 \
-        #&& ln -s libcrypto.so.10 libcrypto.so.1.0.0 \
-        && cp libcrypto.so.10 libcrypto.so.1.0.0 \
-        && cp libssl.so.10 libssl.so.1.0.0 \
-        && ls -hal
+#RUN cd /usr/lib64 \
+#        #&& ln -s libssl.so.10 libssl.so.1.0.0 \
+#        #&& ln -s libcrypto.so.10 libcrypto.so.1.0.0 \
+#        && cp libcrypto.so.10 libcrypto.so.1.0.0 \
+#        && cp libssl.so.10 libssl.so.1.0.0 \
+#        && ls -hal
 
 ENV LD_LIBRARY_PATH $INSTALL_LOC/lib:/usr/lib64:/lib64
+
+COPY /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /usr/lib64/libcrypto.so.1.0.0
+
+COPY /lib/x86_64-linux-gnu/libssl.so.1.0.0 /usr/lib64/libssl.so.1.0.0
 
 # install python3
 RUN set -ex \
