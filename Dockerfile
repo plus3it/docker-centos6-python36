@@ -66,6 +66,12 @@ COPY libcrypto.so.1.0.0 /usr/lib64/libcrypto.so.1.0.0
 
 COPY libssl.so.1.0.0 /usr/lib64/libssl.so.1.0.0
 
+RUN cd /usr/lib64 \
+        && ln -sf libssl.so.1.0.0 libssl.so.10 \
+        && ln -sf libssl.so.1.0.0 libssl.so \
+        && ln -sf libcrypto.so.1.0.0 libcrypto.so.10 \
+        && ln -sf libcrypto.so.1.0.0 libcrypto.so
+
 # install python3
 RUN set -ex \
         && wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
