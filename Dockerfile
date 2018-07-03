@@ -85,17 +85,10 @@ RUN set -ex \
         && make altinstall \
         #&& echo "$INSTALL_LOC/lib" >> /etc/ld.so.conf \
         #&& ldconfig -v \
-        #\
-	&& rm -rf /usr/src/python \
-	&& python --version \
-	#&& ${PYTHON3_EXE} --version \
-        && ls -hal $INSTALL_LOC/bin \
-        && ls -hal $INSTALL_LOC \
-        && ls -hal $INSTALL_LOC/lib \
-        && ls -hal /usr/local/lib
+	&& rm -rf /usr/src/python
 
 # strip symbols from the shared library to reduce the memory footprint.
-#RUN strip $INSTALL_LOC/lib/lib${PYTHON_MINOR_VERSION}m.so.1.0
+#RUN strip $INSTALL_LOC/lib/libpython${PYTHON_MINOR_VERSION}m.so.1.0
 
 # make some useful symlinks that are expected to exist
 RUN cd $INSTALL_LOC/bin \
@@ -136,5 +129,7 @@ RUN pip install \
 
 RUN yum install -y upstart \
         && yum clean all
+
+ENV LD_LIBRARY_PATH=$INSTALL_LOC/lib
 
 CMD ["/bin/bash"]
