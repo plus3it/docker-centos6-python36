@@ -1,7 +1,8 @@
 FROM centos:6
 
-ENV PYTHON_VERSION 3.6.6
-ENV PYTHON3_EXE python3.6
+ENV PYTHON_MINOR_VERSION 3.6
+ENV PYTHON_PATCH_VERSION 6
+ENV PYTHON_VERSION ${PYTHON_MINOR_VERSION}.${PYTHON_PATCH_VERSION}
 
 ENV INSTALL_BASE /opt/python
 ENV INSTALL_LOC $INSTALL_BASE/$PYTHON_VERSION
@@ -97,14 +98,14 @@ RUN set -ex \
         && ls -hal $INSTALL_LOC
 
 # strip symbols from the shared library to reduce the memory footprint.
-RUN strip $INSTALL_LOC/lib/lib${PYTHON3_EXE}m.so.1.0
+RUN strip $INSTALL_LOC/lib/lib${PYTHON_MINOR_VERSION}m.so.1.0
 
 # make some useful symlinks that are expected to exist
 RUN cd $INSTALL_LOC/bin \
-	&& ln -s idle3 idle \
-	&& ln -s pydoc3 pydoc \
-	&& ln -s python3 python \
-	&& ln -s python3-config python-config
+	&& ln -s idle${PYTHON_MINOR_VERSION} idle \
+	&& ln -s pydoc${PYTHON_MINOR_VERSION} pydoc \
+	&& ln -s python${PYTHON_MINOR_VERSION} python3 \
+	&& ln -s python${PYTHON_MINOR_VERSION}m-config python-config
 
 RUN set -ex \
 	&& wget https://bootstrap.pypa.io/get-pip.py \
