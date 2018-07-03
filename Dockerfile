@@ -52,6 +52,14 @@ RUN yum install -y ca-certificates
 # Enable the dynamic CA configuration feature:
 RUN update-ca-trust force-enable
 
+# adjust linking
+RUN cd /usr/lib64 \
+        && ln -s libssl.so.1.0.0 libssl.so.10 \
+        && ln -s libcrypto.so.1.0.0 libcrypto.so.10 \
+        ls -hal
+
+ENV LD_LIBRARY_PATH $INSTALL_LOC/lib:/usr/lib64:/lib64
+
 # install python3
 RUN set -ex \
         && wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
@@ -64,7 +72,7 @@ RUN set -ex \
 	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
 	&& rm python.tar.xz \
 	&& cd /usr/src/python \
-        && export LD_LIBRARY_PATH=$INSTALL_LOC/lib \
+        #&& export LD_LIBRARY_PATH=$INSTALL_LOC/lib \
         #&& ./configure \
         #        --build="$(arch)" \
         #        --prefix=/usr/local \
@@ -129,7 +137,5 @@ RUN pip install \
 
 RUN yum install -y upstart \
         && yum clean all
-
-ENV LD_LIBRARY_PATH=$INSTALL_LOC/lib
 
 CMD ["/bin/bash"]
