@@ -2,6 +2,8 @@ language: python
 sudo: required
 python: "3.6"
 before_install:
+  - sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 .
+  - sudo cp /lib/x86_64-linux-gnu/libssl.so.1.0.0 .
   - sudo apt-get update
   - sudo apt-get install docker
   # setup a credential store for logging into docker hub
