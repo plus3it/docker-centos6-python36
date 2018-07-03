@@ -98,7 +98,7 @@ RUN set -ex \
         && ls -hal $INSTALL_LOC
 
 # strip symbols from the shared library to reduce the memory footprint.
-RUN strip $INSTALL_LOC/lib/lib${PYTHON_MINOR_VERSION}m.so.1.0
+#RUN strip $INSTALL_LOC/lib/lib${PYTHON_MINOR_VERSION}m.so.1.0
 
 # make some useful symlinks that are expected to exist
 RUN cd $INSTALL_LOC/bin \
