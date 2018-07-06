@@ -52,30 +52,7 @@ RUN yum install -y ca-certificates
 # Enable the dynamic CA configuration feature:
 RUN update-ca-trust force-enable
 
-# adjust linking
-#RUN cd /usr/lib64 \
-#        #&& ln -s libssl.so.10 libssl.so.1.0.0 \
-#        #&& ln -s libcrypto.so.10 libcrypto.so.1.0.0 \
-#        && cp libcrypto.so.10 libcrypto.so.1.0.0 \
-#        && cp libssl.so.10 libssl.so.1.0.0 \
-#        && ls -hal
-
 ENV LD_LIBRARY_PATH $INSTALL_LOC/lib:/usr/lib64:/lib64
-
-#COPY libcrypto.so.1.0.0 /usr/lib64/libcrypto.so.1.0.0
-
-#COPY libssl.so.1.0.0 /usr/lib64/libssl.so.1.0.0
-
-#RUN cd /usr/lib64 \
-#        && ln -sf libssl.so.1.0.0 libssl.so.10 \
-#        && ln -sf libssl.so.1.0.0 libssl.so \
-#        && ln -sf libcrypto.so.1.0.0 libcrypto.so.10 \
-#        && ln -sf libcrypto.so.1.0.0 libcrypto.so
-
-#RUN cd /lib64 \
-#        && wget -O libz.so.1.2.3 "https://s3.amazonaws.com/watchmaker-dev/releases/Lib/libz.so.1.2.3" \
-#        && ln -sf libz.so.1.2.3 libz.so.1 \
-#        && ln -sf libz.so.1.2.3 libz.so
 
 # install python3
 RUN set -ex \
@@ -89,12 +66,6 @@ RUN set -ex \
 	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
 	&& rm python.tar.xz \
 	&& cd /usr/src/python \
-        #&& export LD_LIBRARY_PATH=$INSTALL_LOC/lib \
-        #&& ./configure \
-        #        --build="$(arch)" \
-        #        --prefix=/usr/local \
-        #        --enable-shared \
-        #        LDFLAGS="-Wl,-rpath $INSTALL_LOC/lib" \
         && ./configure \
                 --prefix=$INSTALL_LOC \
                 --with-wide-unicode \
@@ -108,12 +79,7 @@ RUN set -ex \
                 CPPFLAGS="-I$INSTALL_LOC/include " \
         && make -j "$(nproc)" \
         && make altinstall \
-        #&& echo "$INSTALL_LOC/lib" >> /etc/ld.so.conf \
-        #&& ldconfig -v \
 	&& rm -rf /usr/src/python
-
-# strip symbols from the shared library to reduce the memory footprint.
-#RUN strip $INSTALL_LOC/lib/libpython${PYTHON_MINOR_VERSION}m.so.1.0
 
 # make some useful symlinks that are expected to exist
 RUN cd $INSTALL_LOC/bin \
