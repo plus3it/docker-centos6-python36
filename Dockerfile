@@ -52,8 +52,6 @@ RUN yum install -y ca-certificates
 # Enable the dynamic CA configuration feature:
 RUN update-ca-trust force-enable
 
-ENV LD_LIBRARY_PATH $INSTALL_LOC/lib:/usr/lib64:/lib64
-
 # install python3
 RUN set -ex \
         && wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
@@ -118,8 +116,6 @@ RUN pip install \
         six \
         wheel
 
-RUN yum clean all
-
-ENV LD_LIBRARY_PATH .:$INSTALL_LOC/lib:/usr/lib64:/lib64        
+RUN yum clean all     
 
 CMD ["/bin/bash"]
