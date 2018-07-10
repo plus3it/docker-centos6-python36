@@ -25,4 +25,4 @@ deploy:
     skip_cleanup: true
     script: bash deploy.sh
     on:
-      branch: develop
+      branch: master
