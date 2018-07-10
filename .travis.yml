@@ -1,6 +1,7 @@
 language: python
 sudo: required
 python: "3.6"
+
 before_install:
   - sudo apt-get update
   - sudo apt-get install docker
@@ -19,6 +20,9 @@ script:
   - sudo docker build -t ${DOCKER_SLUG} .
   - sudo docker images
 
-  # Deploy in script since docker isn't a provider
-  - sudo docker login --username=${DOCKER_USER} --password=${DOCKER_PASSWORD}
-  - sudo docker push ${DOCKER_SLUG}
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: bash deploy.sh
+    on:
+      branch: develop
