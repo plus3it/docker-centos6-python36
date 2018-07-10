@@ -1,4 +1,4 @@
-# centos6py36
+# docker-centos6-python36
 Dockerfile for creating docker image with CentOS 6 and Python 3.
 
 To use the container defined by this repository:
