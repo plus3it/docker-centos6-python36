@@ -8,7 +8,7 @@ ENV INSTALL_BASE /opt/python
 ENV INSTALL_LOC $INSTALL_BASE/$PYTHON_VERSION
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 10.0.1
+ENV PYTHON_PIP_VERSION 18.1
 
 # ensure local python is preferred over distribution python
 ENV PATH $INSTALL_LOC/bin:$PATH
